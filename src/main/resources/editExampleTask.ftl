@@ -3,4 +3,5 @@
 [@ww.textfield labelKey="com.drextended.gppublisher.bamboo.serviceAccountEmail" name="serviceAccountEmail" required='true'/]
 [@ww.textfield labelKey="com.drextended.gppublisher.bamboo.p12KeyPath" name="p12KeyPath" required='true'/]
 [@ww.textfield labelKey="com.drextended.gppublisher.bamboo.apkPath" name="apkPath" required='true'/]
-[@ww.textfield labelKey="com.drextended.gppublisher.bamboo.track" name="track" required='true'/]
+[@ww.radio labelKey="com.drextended.gppublisher.bamboo.track" name="track" list="trackTypes" toggle="true"/]
+[@ww.label labelKey="com.drextended.gppublisher.bamboo.branding" name="googlePlayBranding"/]

@@ -36,20 +36,18 @@ public class TaskConfigurator extends AbstractTaskConfigurator {
     public static final String P12_KEY_PATH = "p12KeyPath";
     public static final String APK_PATH = "apkPath";
     public static final String TRACK = "track";
-//    public static final String TRACK_TYPES = "trackTypes";
-//[@ww.radio labelKey="com.drextended.gppublisher.bamboo.track" name="track" list="trackTypes" toggle="true"/]
-//[@ww.label labelKey="com.drextended.gppublisher.bamboo.branding" name="googlePlayBranding"/]
+    public static final String TRACK_TYPES = "trackTypes";
 
     public static final String TRACK_ALPHA = "alpha";
     public static final String TRACK_BETA = "beta";
     public static final String TRACK_PRODUCTION = "production";
     public static final String TRACK_ROLLOUT = "rollout";
-//    private static final Map<String, String> TRACK_MAP = ImmutableMap.<String, String> builder()
-//            .put(TRACK_ALPHA, TRACK_ALPHA)
-//            .put(TRACK_BETA, TRACK_BETA)
-//            .put(TRACK_PRODUCTION, TRACK_PRODUCTION)
-//            .put(TRACK_ROLLOUT, TRACK_ROLLOUT)
-//            .build();
+    private static final Map<String, String> TRACK_MAP = ImmutableMap.<String, String> builder()
+            .put(TRACK_ALPHA, TRACK_ALPHA)
+            .put(TRACK_BETA, TRACK_BETA)
+            .put(TRACK_PRODUCTION, TRACK_PRODUCTION)
+            .put(TRACK_ROLLOUT, TRACK_ROLLOUT)
+            .build();
 
     public static final String DEFAULT_TRACK = TRACK_ALPHA;
 
@@ -70,7 +68,7 @@ public class TaskConfigurator extends AbstractTaskConfigurator {
     @Override
     public void populateContextForCreate(@NotNull final Map<String, Object> context) {
         super.populateContextForCreate(context);
-//        context.put(TRACK_TYPES, TRACK_MAP);
+        context.put(TRACK_TYPES, TRACK_MAP);
         context.put(TRACK, DEFAULT_TRACK);
     }
 
@@ -83,7 +81,7 @@ public class TaskConfigurator extends AbstractTaskConfigurator {
         context.put(P12_KEY_PATH, taskDefinition.getConfiguration().get(P12_KEY_PATH));
         context.put(APK_PATH, taskDefinition.getConfiguration().get(APK_PATH));
         context.put(TRACK, taskDefinition.getConfiguration().get(TRACK));
-//        context.put(TRACK_TYPES, TRACK_MAP);
+        context.put(TRACK_TYPES, TRACK_MAP);
     }
 
     @Override
