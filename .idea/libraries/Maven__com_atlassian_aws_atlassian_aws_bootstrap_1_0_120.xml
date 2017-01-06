@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.atlassian.aws:atlassian-aws-bootstrap:1.0.120">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/atlassian/aws/atlassian-aws-bootstrap/1.0.120/atlassian-aws-bootstrap-1.0.120.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/atlassian/aws/atlassian-aws-bootstrap/1.0.120/atlassian-aws-bootstrap-1.0.120-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/atlassian/aws/atlassian-aws-bootstrap/1.0.120/atlassian-aws-bootstrap-1.0.120-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

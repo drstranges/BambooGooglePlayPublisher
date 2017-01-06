@@ -1,0 +1,6 @@
+[@ww.textfield labelKey="com.drextended.gppublisher.bamboo.applicationName" name="applicationName" required='true'/]
+[@ww.textfield labelKey="com.drextended.gppublisher.bamboo.packageName" name="packageName" required='true'/]
+[@ww.textfield labelKey="com.drextended.gppublisher.bamboo.serviceAccountEmail" name="serviceAccountEmail" required='true'/]
+[@ww.textfield labelKey="com.drextended.gppublisher.bamboo.p12KeyPath" name="p12KeyPath" required='true'/]
+[@ww.textfield labelKey="com.drextended.gppublisher.bamboo.apkPath" name="apkPath" required='true'/]
+[@ww.textfield labelKey="com.drextended.gppublisher.bamboo.track" name="track" required='true'/]

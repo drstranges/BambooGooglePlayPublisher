@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.atlassian.bonnie:atlassian-bonnie:6.1-lucene4.6-1">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/atlassian/bonnie/atlassian-bonnie/6.1-lucene4.6-1/atlassian-bonnie-6.1-lucene4.6-1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/atlassian/bonnie/atlassian-bonnie/6.1-lucene4.6-1/atlassian-bonnie-6.1-lucene4.6-1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/atlassian/bonnie/atlassian-bonnie/6.1-lucene4.6-1/atlassian-bonnie-6.1-lucene4.6-1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

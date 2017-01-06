@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: velocity-tools:velocity-tools:1.2">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/velocity-tools/velocity-tools/1.2/velocity-tools-1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/velocity-tools/velocity-tools/1.2/velocity-tools-1.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/velocity-tools/velocity-tools/1.2/velocity-tools-1.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

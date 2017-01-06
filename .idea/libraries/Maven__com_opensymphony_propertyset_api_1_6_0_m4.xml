@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.opensymphony.propertyset:api:1.6.0-m4">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/opensymphony/propertyset/api/1.6.0-m4/api-1.6.0-m4.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/opensymphony/propertyset/api/1.6.0-m4/api-1.6.0-m4-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/opensymphony/propertyset/api/1.6.0-m4/api-1.6.0-m4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.jvnet.winp:winp:1.17-atlassian1">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jvnet/winp/winp/1.17-atlassian1/winp-1.17-atlassian1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jvnet/winp/winp/1.17-atlassian1/winp-1.17-atlassian1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/jvnet/winp/winp/1.17-atlassian1/winp-1.17-atlassian1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

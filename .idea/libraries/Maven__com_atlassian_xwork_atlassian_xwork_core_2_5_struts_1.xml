@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.atlassian.xwork:atlassian-xwork-core:2.5-struts-1">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/atlassian/xwork/atlassian-xwork-core/2.5-struts-1/atlassian-xwork-core-2.5-struts-1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/atlassian/xwork/atlassian-xwork-core/2.5-struts-1/atlassian-xwork-core-2.5-struts-1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/atlassian/xwork/atlassian-xwork-core/2.5-struts-1/atlassian-xwork-core-2.5-struts-1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

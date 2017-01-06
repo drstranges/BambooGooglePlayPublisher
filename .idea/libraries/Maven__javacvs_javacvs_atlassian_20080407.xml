@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: javacvs:javacvs:atlassian-20080407">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/javacvs/javacvs/atlassian-20080407/javacvs-atlassian-20080407.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/javacvs/javacvs/atlassian-20080407/javacvs-atlassian-20080407-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/javacvs/javacvs/atlassian-20080407/javacvs-atlassian-20080407-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

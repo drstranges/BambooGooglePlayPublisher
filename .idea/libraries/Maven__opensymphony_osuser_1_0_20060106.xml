@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: opensymphony:osuser:1.0-20060106">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/opensymphony/osuser/1.0-20060106/osuser-1.0-20060106.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/opensymphony/osuser/1.0-20060106/osuser-1.0-20060106-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/opensymphony/osuser/1.0-20060106/osuser-1.0-20060106-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
