@@ -27,5 +27,6 @@
         <configuration class="com.drextended.gppublisher.bamboo.TaskConfigurator"/>
         <resource type="freemarker" name="edit" location="editExampleTask.ftl"/>
     </taskType>
-    
+    <!--<resource type="download" name="icon" location="icon.png"/>-->
+
 </atlassian-plugin>
