@@ -32,28 +32,26 @@ public class GPPTask implements TaskType {
 
         final String applicationName = taskContext.getConfigurationMap().get("applicationName");
         final String packageName = taskContext.getConfigurationMap().get("packageName");
-        final String serviceAccountEmail = taskContext.getConfigurationMap().get("serviceAccountEmail");
-        final String p12KeyPath = taskContext.getConfigurationMap().get("p12KeyPath");
+        final String jsonKeyPath = taskContext.getConfigurationMap().get("jsonKeyPath");
         final String apkPath = taskContext.getConfigurationMap().get("apkPath");
         final String track = taskContext.getConfigurationMap().get("track");
 
         buildLogger.addBuildLogEntry("Start deploy task for app " + applicationName);
 
         try {
-            UploadApkUtils.uploadApk(
+            UploadApkUtils.uploadApk(buildLogger,
                     applicationName,
                     packageName,
-                    serviceAccountEmail,
-                    p12KeyPath,
+                    jsonKeyPath,
                     apkPath,
                     track);
             builder.success();
         } catch (IOException ex) {
-            buildLogger.addBuildLogEntry("Exception was thrown while uploading apk to " + track + " track: " + ex.getMessage());
+            buildLogger.addBuildLogEntry("Exception: " + ex.getMessage());
             builder.failed();
         } catch (GeneralSecurityException ex) {
             builder.failed();
-            buildLogger.addBuildLogEntry("Exception was thrown while uploading apk to " + track + " track: " + ex.getMessage());
+            buildLogger.addBuildLogEntry("Exception: " + ex.getMessage());
         }
 
         return builder.build();

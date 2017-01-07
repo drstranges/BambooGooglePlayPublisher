@@ -15,6 +15,7 @@
  */
 package com.drextended.gppublisher.bamboo.util;
 
+import com.atlassian.bamboo.build.logger.BuildLogger;
 import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
@@ -28,8 +29,6 @@ import com.google.api.services.androidpublisher.AndroidPublisher.Edits.Tracks.Up
 import com.google.api.services.androidpublisher.model.Apk;
 import com.google.api.services.androidpublisher.model.AppEdit;
 import com.google.api.services.androidpublisher.model.Track;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,48 +41,45 @@ import java.util.List;
  */
 public class UploadApkUtils {
 
-    private static final Log log = LogFactory.getLog(UploadApkUtils.class);
-
     /**
-     * @param applicationName     The name of your application. If the application name is
-     *                            {@code null} or blank, the application will log a warning. Suggested
-     *                            format is "MyCompany-Application/1.0".
-     * @param packageName         the package name of the app
-     * @param serviceAccountEmail the service account email
-     * @param p12KeyPath          the service account key.p12 file path
-     * @param apkPath             the apk file path of the apk to upload
-     * @param track               The track for uploading the apk, can be 'alpha', beta', 'production' or 'rollout'
+     * @param buildLogger
+     * @param applicationName The name of your application. If the application name is
+     *                        {@code null} or blank, the application will log a warning. Suggested
+     *                        format is "MyCompany-Application/1.0".
+     * @param packageName     the package name of the app
+     * @param jsonKeyPath     the service account secret json file path
+     * @param apkPath         the apk file path of the apk to upload
+     * @param track           The track for uploading the apk, can be 'alpha', beta', 'production' or 'rollout'
      * @throws IOException
      * @throws GeneralSecurityException
      */
-    public static void uploadApk(String applicationName, final String packageName, String serviceAccountEmail, String p12KeyPath, String apkPath, final String track) throws IOException, GeneralSecurityException {
+    public static void uploadApk(BuildLogger buildLogger, String applicationName, final String packageName, String jsonKeyPath, String apkPath, final String track) throws IOException, GeneralSecurityException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(applicationName), "applicationName cannot be null or empty!");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(packageName), "packageName cannot be null or empty!");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(serviceAccountEmail), "serviceAccountEmail cannot be null or empty!");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(p12KeyPath), "p12KeyPath cannot be null or empty!");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(jsonKeyPath), "jsonKeyPath cannot be null or empty!");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(apkPath), "apkPath cannot be null or empty!");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(track), "track cannot be null or empty!");
 
-        // Create the API service.
-        AndroidPublisher service = AndroidPublisherHelper.init(applicationName, serviceAccountEmail, p12KeyPath);
+        buildLogger.addBuildLogEntry("Create the API service.");
+        AndroidPublisher service = AndroidPublisherHelper.init(buildLogger, applicationName, jsonKeyPath);
         final Edits edits = service.edits();
 
-        // Create a new edit to make changes to your listing.
+        buildLogger.addBuildLogEntry("Create a new edit to make changes to your listing.");
         Insert editRequest = edits.insert(packageName, null /* no content */);
         AppEdit edit = editRequest.execute();
         final String editId = edit.getId();
-        log.info(String.format("Created edit with id: %s", editId));
+        buildLogger.addBuildLogEntry(String.format("Created edit with id: %s", editId));
 
-        // Upload new apk to developer console
+        buildLogger.addBuildLogEntry("Uploading new apk to developer console...");
         final AbstractInputStreamContent apkFile =
                 new FileContent(AndroidPublisherHelper.MIME_TYPE_APK, new File(apkPath));
         Upload uploadRequest = edits
                 .apks()
                 .upload(packageName, editId, apkFile);
         Apk apk = uploadRequest.execute();
-        log.info(String.format("Version code %d has been uploaded", apk.getVersionCode()));
+        buildLogger.addBuildLogEntry(String.format("Version code %s has been uploaded", apk.getVersionCode()));
 
-        // Assign apk to the track.
+        buildLogger.addBuildLogEntry("Assigning apk to the " + track + " track");
         List<Integer> apkVersionCodes = new ArrayList<Integer>();
         apkVersionCodes.add(apk.getVersionCode());
         Update updateTrackRequest = edits
@@ -93,13 +89,13 @@ public class UploadApkUtils {
                         track,
                         new Track().setVersionCodes(apkVersionCodes));
         Track updatedTrack = updateTrackRequest.execute();
-        log.info(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+        buildLogger.addBuildLogEntry(String.format("Track \"%s\" has been updated.", updatedTrack.getTrack()));
 
-        // Commit changes for edit.
+        buildLogger.addBuildLogEntry("Commit changes for edit.");
         Commit commitRequest = edits.commit(packageName, editId);
         AppEdit appEdit = commitRequest.execute();
         String appEditId = appEdit.getId();
-        log.info(String.format("App edit with id %s has been committed", appEditId));
-        log.info(String.format("\nPUBLISH \"%s\" SUCCESSFUL\n", track));
+        buildLogger.addBuildLogEntry(String.format("App edit with id %s has been committed!", appEditId));
+        buildLogger.addBuildLogEntry("==========\n\n PUBLISHED SUCCESSFUL \n\n==========");
     }
 }

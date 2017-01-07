@@ -32,8 +32,7 @@ import java.util.Map;
 public class TaskConfigurator extends AbstractTaskConfigurator {
     public static final String APPLICATION_NAME = "applicationName";
     public static final String PACKAGE_NAME = "packageName";
-    public static final String SERVICE_ACCOUNT_EMAIL = "serviceAccountEmail";
-    public static final String P12_KEY_PATH = "p12KeyPath";
+    public static final String JSON_KEY_PATH = "jsonKeyPath";
     public static final String APK_PATH = "apkPath";
     public static final String TRACK = "track";
     public static final String TRACK_TYPES = "trackTypes";
@@ -57,8 +56,7 @@ public class TaskConfigurator extends AbstractTaskConfigurator {
         final Map<String, String> config = super.generateTaskConfigMap(params, previousTaskDefinition);
         config.put(APPLICATION_NAME, params.getString(APPLICATION_NAME));
         config.put(PACKAGE_NAME, params.getString(PACKAGE_NAME));
-        config.put(SERVICE_ACCOUNT_EMAIL, params.getString(SERVICE_ACCOUNT_EMAIL));
-        config.put(P12_KEY_PATH, params.getString(P12_KEY_PATH));
+        config.put(JSON_KEY_PATH, params.getString(JSON_KEY_PATH));
         config.put(APK_PATH, params.getString(APK_PATH));
         config.put(TRACK, params.getString(TRACK));
 
@@ -77,8 +75,7 @@ public class TaskConfigurator extends AbstractTaskConfigurator {
         super.populateContextForEdit(context, taskDefinition);
         context.put(APPLICATION_NAME, taskDefinition.getConfiguration().get(APPLICATION_NAME));
         context.put(PACKAGE_NAME, taskDefinition.getConfiguration().get(PACKAGE_NAME));
-        context.put(SERVICE_ACCOUNT_EMAIL, taskDefinition.getConfiguration().get(SERVICE_ACCOUNT_EMAIL));
-        context.put(P12_KEY_PATH, taskDefinition.getConfiguration().get(P12_KEY_PATH));
+        context.put(JSON_KEY_PATH, taskDefinition.getConfiguration().get(JSON_KEY_PATH));
         context.put(APK_PATH, taskDefinition.getConfiguration().get(APK_PATH));
         context.put(TRACK, taskDefinition.getConfiguration().get(TRACK));
         context.put(TRACK_TYPES, TRACK_MAP);
@@ -90,8 +87,7 @@ public class TaskConfigurator extends AbstractTaskConfigurator {
 
         validateNotEmpty(params, errorCollection, APPLICATION_NAME);
         validateNotEmpty(params, errorCollection, PACKAGE_NAME);
-        validateNotEmpty(params, errorCollection, SERVICE_ACCOUNT_EMAIL);
-        validateNotEmpty(params, errorCollection, P12_KEY_PATH);
+        validateNotEmpty(params, errorCollection, JSON_KEY_PATH);
         validateNotEmpty(params, errorCollection, APK_PATH);
         validateNotEmpty(params, errorCollection, TRACK);
     }
@@ -100,6 +96,8 @@ public class TaskConfigurator extends AbstractTaskConfigurator {
         final String value = params.getString(key);
         if (StringUtils.isEmpty(value)) {
             errorCollection.addError(key, "This field can't be empty");
+        } else if (APK_PATH.equals(key) && !value.endsWith(".apk")) {
+            errorCollection.addError(key, "Should be path to *.apk file");
         }
     }
 }

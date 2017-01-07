@@ -15,6 +15,7 @@
  */
 package com.drextended.gppublisher.bamboo.util;
 
+import com.atlassian.bamboo.build.logger.BuildLogger;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -25,10 +26,8 @@ import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.api.services.androidpublisher.AndroidPublisher;
 import com.google.api.services.androidpublisher.AndroidPublisherScopes;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
@@ -37,85 +36,58 @@ import java.util.Collections;
  * Helper class to initialize the publisher APIs client library.
  * <p>
  * Before making any calls to the API through the client library you need to
- * call the {@link AndroidPublisherHelper#init(String, String, String)} method. This will run
- * all precondition checks.
+ * call the {@link AndroidPublisherHelper#init(BuildLogger, String, String)} method.
+ * This will run all precondition checks.
  * </p>
- * @
  */
 public class AndroidPublisherHelper {
-
-    private static final Log log = LogFactory.getLog(AndroidPublisherHelper.class);
 
     static final String MIME_TYPE_APK = "application/vnd.android.package-archive";
 
     /**
-     * Global instance of the JSON factory.
-     */
-    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-
-    /**
-     * Global instance of the HTTP transport.
-     */
-    private static HttpTransport HTTP_TRANSPORT;
-
-    /**
      * Authorizes using service account
      *
-     * @param serviceAccountEmail Service account email
-     * @param p12KeyPath          Path to the private key file
+     * @param httpTransport
+     * @param jsonFactory
+     * @param jsonKeyPath   Path to the json key file
      * @return
      * @throws GeneralSecurityException
      * @throws IOException
      */
-    private static Credential authorizeWithServiceAccount(String serviceAccountEmail, String p12KeyPath)
+    private static Credential authorizeWithServiceAccountFromJson(HttpTransport httpTransport, JsonFactory jsonFactory, String jsonKeyPath)
             throws GeneralSecurityException, IOException {
-        log.info(String.format("Authorizing using Service Account: %s", serviceAccountEmail));
 
-        // Build service account credential.
-        GoogleCredential credential = new GoogleCredential.Builder()
-                .setTransport(HTTP_TRANSPORT)
-                .setJsonFactory(JSON_FACTORY)
-                .setServiceAccountId(serviceAccountEmail)
-                .setServiceAccountScopes(
-                        Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER))
-                .setServiceAccountPrivateKeyFromP12File(new File(p12KeyPath))
-                .build();
-        return credential;
+        return GoogleCredential.fromStream(new FileInputStream(jsonKeyPath), httpTransport, jsonFactory)
+                .createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
     }
 
     /**
      * Performs all necessary setup steps for running requests against the API.
      *
-     * @param applicationName     the name of the application
-     * @param serviceAccountEmail the Service Account Email
-     * @param p12KeyPath          Path to the private key file
+     * @param buildLogger
+     * @param applicationName the name of the application
+     * @param jsonKeyPath     Path to the private json key file
      * @return the {@Link AndroidPublisher} service
      * @throws GeneralSecurityException
      * @throws IOException
      */
-    protected static AndroidPublisher init(String applicationName, String serviceAccountEmail, String p12KeyPath) throws IOException, GeneralSecurityException {
+    protected static AndroidPublisher init(BuildLogger buildLogger, String applicationName, String jsonKeyPath) throws IOException, GeneralSecurityException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(applicationName),
                 "applicationName cannot be null or empty!");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(serviceAccountEmail),
-                "serviceAccountEmail cannot be null or empty!");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(p12KeyPath),
-                "p12KeyPath cannot be null or empty!");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(jsonKeyPath),
+                "jsonKeyPath cannot be null or empty!");
 
-        // Authorization.
-        newTrustedTransport();
-        Credential credential = authorizeWithServiceAccount(serviceAccountEmail, p12KeyPath);
+        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+        HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+
+        buildLogger.addBuildLogEntry("Authorizing using secret json...");
+        Credential credential = authorizeWithServiceAccountFromJson(httpTransport, jsonFactory, jsonKeyPath);
+        buildLogger.addBuildLogEntry("Authorized successfully");
 
         // Set up and return API client.
-        return new AndroidPublisher.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
+        return new AndroidPublisher.Builder(httpTransport, jsonFactory, credential)
                 .setApplicationName(applicationName)
                 .build();
-    }
-
-    private static void newTrustedTransport() throws GeneralSecurityException,
-            IOException {
-        if (null == HTTP_TRANSPORT) {
-            HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        }
     }
 
 }
