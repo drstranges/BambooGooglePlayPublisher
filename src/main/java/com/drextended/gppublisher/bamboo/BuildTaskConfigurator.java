@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * Created by Romka on 06.01.2017.
  */
-public class TaskConfigurator extends AbstractTaskConfigurator {
+public class BuildTaskConfigurator extends AbstractTaskConfigurator {
     public static final String APPLICATION_NAME = "applicationName";
     public static final String PACKAGE_NAME = "packageName";
     public static final String JSON_KEY_PATH = "jsonKeyPath";

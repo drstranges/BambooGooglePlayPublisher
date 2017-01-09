@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-public class GPPTask implements TaskType {
+public class GPPBuildTask implements TaskType {
 
     @NotNull
     public TaskResult execute(final TaskContext taskContext) throws TaskException {

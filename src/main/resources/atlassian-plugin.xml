@@ -21,11 +21,19 @@
         <context>bamboogppublisher</context>
     </web-resource>
 
-    <taskType key="GPPTask" name="Google Play Publisher" class="com.drextended.gppublisher.bamboo.GPPTask">
+    <taskType key="GPPBuildTask" name="Google Play Publisher" class="com.drextended.gppublisher.bamboo.GPPBuildTask">
         <description>A task that publish your apk file to Google Play using the Google Play Developer Publishing API</description>
         <category name="deployment"/>
-        <configuration class="com.drextended.gppublisher.bamboo.TaskConfigurator"/>
-        <resource type="freemarker" name="edit" location="editExampleTask.ftl"/>
+        <configuration class="com.drextended.gppublisher.bamboo.BuildTaskConfigurator"/>
+        <resource type="freemarker" name="edit" location="editBuildTask.ftl"/>
+        <resource type="download" name="icon" location="icon.png"/>
+    </taskType>
+
+    <taskType key="GPPDeploymentTask" name="Google Play Publisher" class="com.drextended.gppublisher.bamboo.GPPDeploymentTask">
+        <description>A task that publish your apk file to Google Play using the Google Play Developer Publishing API</description>
+        <category name="deployment"/>
+        <configuration class="com.drextended.gppublisher.bamboo.DeploymentTaskConfigurator"/>
+        <resource type="freemarker" name="edit" location="editDeploymentTask.ftl"/>
         <resource type="download" name="icon" location="icon.png"/>
     </taskType>
 
