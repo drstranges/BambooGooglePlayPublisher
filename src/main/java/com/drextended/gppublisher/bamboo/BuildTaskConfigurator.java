@@ -34,6 +34,8 @@ public class BuildTaskConfigurator extends AbstractTaskConfigurator {
     public static final String PACKAGE_NAME = "packageName";
     public static final String JSON_KEY_PATH = "jsonKeyPath";
     public static final String APK_PATH = "apkPath";
+    public static final String DEOBFUSCATION_FILE_PATH = "deobfuscationFilePath";
+    public static final String RECENT_CHANGES_LISTINGS = "recentChangesListings";
     public static final String TRACK = "track";
     public static final String TRACK_TYPES = "trackTypes";
 
@@ -58,6 +60,8 @@ public class BuildTaskConfigurator extends AbstractTaskConfigurator {
         config.put(PACKAGE_NAME, params.getString(PACKAGE_NAME));
         config.put(JSON_KEY_PATH, params.getString(JSON_KEY_PATH));
         config.put(APK_PATH, params.getString(APK_PATH));
+        config.put(DEOBFUSCATION_FILE_PATH, params.getString(DEOBFUSCATION_FILE_PATH));
+        config.put(RECENT_CHANGES_LISTINGS, params.getString(RECENT_CHANGES_LISTINGS));
         config.put(TRACK, params.getString(TRACK));
 
         return config;
@@ -77,6 +81,8 @@ public class BuildTaskConfigurator extends AbstractTaskConfigurator {
         context.put(PACKAGE_NAME, taskDefinition.getConfiguration().get(PACKAGE_NAME));
         context.put(JSON_KEY_PATH, taskDefinition.getConfiguration().get(JSON_KEY_PATH));
         context.put(APK_PATH, taskDefinition.getConfiguration().get(APK_PATH));
+        context.put(DEOBFUSCATION_FILE_PATH, taskDefinition.getConfiguration().get(DEOBFUSCATION_FILE_PATH));
+        context.put(RECENT_CHANGES_LISTINGS, taskDefinition.getConfiguration().get(RECENT_CHANGES_LISTINGS));
         context.put(TRACK, taskDefinition.getConfiguration().get(TRACK));
         context.put(TRACK_TYPES, TRACK_MAP);
     }

@@ -2,5 +2,7 @@
 [@ww.textfield labelKey="com.drextended.gppublisher.bamboo.packageName" name="packageName" required='true'/]
 [@ww.textfield labelKey="com.drextended.gppublisher.bamboo.jsonKeyPath" name="jsonKeyPath" required='true'/]
 [@ww.textfield labelKey="com.drextended.gppublisher.bamboo.apkPath" name="apkPath" required='true'/]
+[@ww.textfield labelKey="com.drextended.gppublisher.bamboo.deobfuscationFilePath" name="deobfuscationFilePath" required='false'/]
+[@ww.textfield labelKey="com.drextended.gppublisher.bamboo.recentChangesListings" name="recentChangesListings" required='false'/]
 [@ww.select labelKey="com.drextended.gppublisher.bamboo.track" name="track" list="trackTypes" required='true'/]
 [@ww.label labelKey="com.drextended.gppublisher.bamboo.branding" name="googlePlayBranding"/]

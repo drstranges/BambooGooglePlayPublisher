@@ -38,6 +38,8 @@ public class GPPDeploymentTask implements DeploymentTaskType {
         final String packageName = taskContext.getConfigurationMap().get("packageName");
         final String jsonKeyPath = taskContext.getConfigurationMap().get("jsonKeyPath");
         final String apkPath = taskContext.getConfigurationMap().get("apkPath");
+        final String deobfuscationFilePath = taskContext.getConfigurationMap().get("deobfuscationFilePath");
+        final String recentChangesListings = taskContext.getConfigurationMap().get("recentChangesListings");
         final String track = taskContext.getConfigurationMap().get("track");
 
         buildLogger.addBuildLogEntry("Start deploy task for app " + applicationName);
@@ -48,6 +50,8 @@ public class GPPDeploymentTask implements DeploymentTaskType {
                     packageName,
                     jsonKeyPath,
                     apkPath,
+                    deobfuscationFilePath,
+                    recentChangesListings,
                     track);
             builder.success();
         } catch (IOException ex) {
