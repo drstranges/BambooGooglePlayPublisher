@@ -17,7 +17,7 @@ package com.drextended.gppublisher.bamboo;
 
 import com.atlassian.bamboo.build.logger.BuildLogger;
 import com.atlassian.bamboo.task.*;
-import com.drextended.gppublisher.bamboo.util.UploadApkUtils;
+import com.drextended.gppublisher.bamboo.util.AndroidPublisherHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -33,22 +33,21 @@ public class GPPBuildTask implements TaskType {
         final String applicationName = taskContext.getConfigurationMap().get("applicationName");
         final String packageName = taskContext.getConfigurationMap().get("packageName");
         final String jsonKeyPath = taskContext.getConfigurationMap().get("jsonKeyPath");
+        final String jsonKeyContent = taskContext.getConfigurationMap().get("jsonKeyContent");
+        final boolean findJsonKeyInFile = taskContext.getConfigurationMap().getAsBoolean("findJsonKeyInFile");
         final String apkPath = taskContext.getConfigurationMap().get("apkPath");
-        final String track = taskContext.getConfigurationMap().get("track");
         final String deobfuscationFilePath = taskContext.getConfigurationMap().get("deobfuscationFilePath");
         final String recentChangesListings = taskContext.getConfigurationMap().get("recentChangesListings");
+        final String track = taskContext.getConfigurationMap().get("track");
+        final String rolloutFraction = taskContext.getConfigurationMap().get("rolloutFraction");
 
         buildLogger.addBuildLogEntry("Start deploy task for app " + applicationName);
 
         try {
-            UploadApkUtils.uploadApk(buildLogger,
-                    applicationName,
-                    packageName,
-                    jsonKeyPath,
-                    apkPath,
-                    deobfuscationFilePath,
-                    recentChangesListings,
-                    track);
+            AndroidPublisherHelper helper = new AndroidPublisherHelper(taskContext.getWorkingDirectory(), buildLogger, applicationName, packageName, findJsonKeyInFile, jsonKeyPath, jsonKeyContent, apkPath, deobfuscationFilePath, recentChangesListings, track, rolloutFraction);
+            helper.init();
+            helper.makeInsertRequest();
+
             builder.success();
         } catch (IOException ex) {
             buildLogger.addBuildLogEntry("Exception: " + ex.getMessage());
