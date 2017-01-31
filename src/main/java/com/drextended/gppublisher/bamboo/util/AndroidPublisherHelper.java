@@ -41,8 +41,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.drextended.gppublisher.bamboo.BaseTaskConfigurator.TRACK_NONE;
-
 /**
  * Helper class to initialize the publisher APIs client library.
  * <p>
@@ -54,6 +52,12 @@ import static com.drextended.gppublisher.bamboo.BaseTaskConfigurator.TRACK_NONE;
 public class AndroidPublisherHelper {
 
     static final String MIME_TYPE_APK = "application/vnd.android.package-archive";
+    public static final String TRACK_NONE = "none";
+    public static final String TRACK_ALPHA = "alpha";
+    public static final String TRACK_BETA = "beta";
+    public static final String TRACK_PRODUCTION = "production";
+    public static final String TRACK_ROLLOUT = "rollout";
+
     private final File mWorkingDirectory;
     private final BuildLogger mLogger;
     private final String mApplicationName;
@@ -117,7 +121,7 @@ public class AndroidPublisherHelper {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(mTrack), "Track cannot be null or empty!");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(mApkPath), "Apk path cannot be null or empty!");
 
-        if (DeploymentTaskConfigurator.TRACK_ROLLOUT.equals(mTrack)) {
+        if (TRACK_ROLLOUT.equals(mTrack)) {
             try {
                 mRolloutFraction = Double.parseDouble(mRolloutFractionString);
             } catch (NumberFormatException ex) {
@@ -245,7 +249,7 @@ public class AndroidPublisherHelper {
             mLogger.addBuildLogEntry("Assigning apk to the \"" + mTrack + "\" track...");
             List<Integer> apkVersionCodes = Collections.singletonList(apkVersionCode);
             Track trackContent = new Track().setTrack(mTrack).setVersionCodes(apkVersionCodes);
-            if (DeploymentTaskConfigurator.TRACK_ROLLOUT.equals(mTrack)) {
+            if (TRACK_ROLLOUT.equals(mTrack)) {
                 trackContent.setUserFraction(mRolloutFraction);
             }
             edits.tracks()

@@ -26,6 +26,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
+import static com.drextended.gppublisher.bamboo.util.AndroidPublisherHelper.*;
+
 /**
  * Created by Romka on 06.01.2017.
  */
@@ -44,11 +46,6 @@ public class BaseTaskConfigurator extends AbstractTaskConfigurator {
     public static final String TRACK = "track";
     public static final String TRACK_TYPES = "trackTypes";
 
-    public static final String TRACK_NONE = "none";
-    public static final String TRACK_ALPHA = "alpha";
-    public static final String TRACK_BETA = "beta";
-    public static final String TRACK_PRODUCTION = "production";
-    public static final String TRACK_ROLLOUT = "rollout";
     public static final String ROLLOUT_FRACTION = "rolloutFraction";
     public static final String ROLLOUT_FRACTIONS = "rolloutFractions";
     public static final String ROLLOUT_FRACTION_DEFAULT = "0.1"; // Acceptable values are 0.05, 0.1, 0.2, and 0.5
