@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.drextended.gppublisher</groupId>
     <artifactId>bamboogppublisher</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 
     <organization>
         <name>Roman Donchenko</name>
