@@ -41,6 +41,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.drextended.gppublisher.bamboo.BaseTaskConfigurator.TRACK_NONE;
+
 /**
  * Helper class to initialize the publisher APIs client library.
  * <p>
@@ -239,17 +241,18 @@ public class AndroidPublisherHelper {
             }
         }
 
-        mLogger.addBuildLogEntry("Assigning apk to the \"" + mTrack + "\" track...");
-        List<Integer> apkVersionCodes = Collections.singletonList(apkVersionCode);
-        Track trackContent = new Track().setTrack(mTrack).setVersionCodes(apkVersionCodes);
-        if (DeploymentTaskConfigurator.TRACK_ROLLOUT.equals(mTrack)) {
-            trackContent.setUserFraction(mRolloutFraction);
+        if (!TRACK_NONE.equals(mTrack)) {
+            mLogger.addBuildLogEntry("Assigning apk to the \"" + mTrack + "\" track...");
+            List<Integer> apkVersionCodes = Collections.singletonList(apkVersionCode);
+            Track trackContent = new Track().setTrack(mTrack).setVersionCodes(apkVersionCodes);
+            if (DeploymentTaskConfigurator.TRACK_ROLLOUT.equals(mTrack)) {
+                trackContent.setUserFraction(mRolloutFraction);
+            }
+            edits.tracks()
+                    .update(mPackageName, editId, mTrack, trackContent)
+                    .execute();
+            mLogger.addBuildLogEntry(String.format("Track \"%s\" has been updated!", mTrack));
         }
-        edits.tracks()
-                .update(mPackageName, editId, mTrack, trackContent)
-                .execute();
-        mLogger.addBuildLogEntry(String.format("Track \"%s\" has been updated!", mTrack));
-
         mLogger.addBuildLogEntry("Committing changes for edit...");
         AppEdit appEdit = edits.commit(mPackageName, editId)
                 .execute();
