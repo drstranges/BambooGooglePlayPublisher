@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: com.atlassian.annotations:atlassian-annotations:0.16">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/atlassian/annotations/atlassian-annotations/0.16/atlassian-annotations-0.16.jar!/" />
+      <root url="jar://D:/Dev_Env/Atlassian/atlassian-plugin-sdk-6.3.10/repository/com/atlassian/annotations/atlassian-annotations/0.16/atlassian-annotations-0.16.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/com/atlassian/annotations/atlassian-annotations/0.16/atlassian-annotations-0.16-javadoc.jar!/" />
+      <root url="jar://D:/Dev_Env/Atlassian/atlassian-plugin-sdk-6.3.10/repository/com/atlassian/annotations/atlassian-annotations/0.16/atlassian-annotations-0.16-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/atlassian/annotations/atlassian-annotations/0.16/atlassian-annotations-0.16-sources.jar!/" />
+      <root url="jar://D:/Dev_Env/Atlassian/atlassian-plugin-sdk-6.3.10/repository/com/atlassian/annotations/atlassian-annotations/0.16/atlassian-annotations-0.16-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
