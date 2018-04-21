@@ -12,7 +12,7 @@ Plugin for Atlassian Bamboo for uploading apk files on Google Play using Publish
 * atlas-help  -- prints description for all commands in the SDK
 
 ## Used Library:
-  - [Google Play Developer API client library](https://developers.google.com/android-publisher/libraries)
+  - [Google Play Developer API client library](https://developers.google.com/android-publisher)
 
 License
 =======

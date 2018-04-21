@@ -7,11 +7,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.drextended.gppublisher</groupId>
     <artifactId>bamboogppublisher</artifactId>
-    <version>1.1.2</version>
+    <version>1.2.0</version>
 
     <organization>
         <name>Roman Donchenko</name>
-        <url>http://www.example.com/</url>
+        <url>https://github.com/drstranges/BambooGooglePlayPublisher</url>
     </organization>
 
     <name>Google Play Publisher</name>
@@ -19,9 +19,9 @@
     <packaging>atlassian-plugin</packaging>
 
     <properties>
-        <bamboo.version>5.13.2</bamboo.version>
-        <bamboo.data.version>5.13.2</bamboo.data.version>
-        <amps.version>6.2.11</amps.version>
+        <bamboo.version>6.4.1</bamboo.version>
+        <bamboo.data.version>6.4.1</bamboo.data.version>
+        <amps.version>6.3.3</amps.version>
         <plugin.testrunner.version>1.2.3</plugin.testrunner.version>
         <atlassian.spring.scanner.version>1.2.13</atlassian.spring.scanner.version>
         <!-- This key is used to keep the consistency between the key in atlassian-plugin.xml and the key to generate bundle. -->
@@ -68,7 +68,7 @@
         <dependency>
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-androidpublisher</artifactId>
-            <version>v2-rev42-1.22.0</version>
+            <version>v2-rev64-1.23.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

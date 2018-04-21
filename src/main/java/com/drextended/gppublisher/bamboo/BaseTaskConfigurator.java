@@ -57,13 +57,14 @@ public class BaseTaskConfigurator extends AbstractTaskConfigurator {
             .build();
     private static final Map<String, String> TRACK_MAP = ImmutableMap.<String, String>builder()
             .put(TRACK_NONE, TRACK_NONE)
+            .put(TRACK_INTERNAL, TRACK_INTERNAL)
             .put(TRACK_ALPHA, TRACK_ALPHA)
             .put(TRACK_BETA, TRACK_BETA)
             .put(TRACK_PRODUCTION, TRACK_PRODUCTION)
             .put(TRACK_ROLLOUT, TRACK_ROLLOUT)
             .build();
 
-    public static final String DEFAULT_TRACK = TRACK_ALPHA;
+    public static final String DEFAULT_TRACK = TRACK_INTERNAL;
 
     public BaseTaskConfigurator() {
     }

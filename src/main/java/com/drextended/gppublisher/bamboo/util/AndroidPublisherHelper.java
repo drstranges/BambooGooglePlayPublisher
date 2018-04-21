@@ -53,6 +53,7 @@ public class AndroidPublisherHelper {
 
     static final String MIME_TYPE_APK = "application/vnd.android.package-archive";
     public static final String TRACK_NONE = "none";
+    public static final String TRACK_INTERNAL = "internal";
     public static final String TRACK_ALPHA = "alpha";
     public static final String TRACK_BETA = "beta";
     public static final String TRACK_PRODUCTION = "production";
@@ -261,6 +262,6 @@ public class AndroidPublisherHelper {
         AppEdit appEdit = edits.commit(mPackageName, editId)
                 .execute();
         mLogger.addBuildLogEntry(String.format("App edit with id %s has been committed!", appEdit.getId()));
-        mLogger.addBuildLogEntry("==========\n\n PUBLISHED SUCCESSFUL \n\n==========");
+        mLogger.addBuildLogEntry("=\n\n==================\n\n PUBLISHED SUCCESSFUL \n\n==================\n\n");
     }
 }
