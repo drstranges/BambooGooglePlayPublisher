@@ -16,7 +16,6 @@
 package com.drextended.gppublisher.bamboo.util;
 
 import com.atlassian.bamboo.build.logger.BuildLogger;
-import com.drextended.gppublisher.bamboo.DeploymentTaskConfigurator;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -58,6 +57,7 @@ public class AndroidPublisherHelper {
     public static final String TRACK_BETA = "beta";
     public static final String TRACK_PRODUCTION = "production";
     public static final String TRACK_ROLLOUT = "rollout";
+    public static final String TRACK_CUSTOM = "custom";
 
     private final File mWorkingDirectory;
     private final BuildLogger mLogger;
@@ -71,29 +71,47 @@ public class AndroidPublisherHelper {
     private final String mRecentChangesListings;
     private final String mTrack;
     private final String mRolloutFractionString;
+    private String mTrackCustomNames;
 
     private AndroidPublisher mAndroidPublisher;
     private File mApkFile;
     private File mDeobfuscationFile;
     private ArrayList<ApkListing> mApkListings;
     private Double mRolloutFraction;
+    private String[] mCustomTracks;
 
     /**
      * @param workingDirectory
      * @param buildLogger
      * @param applicationName       The name of your application. If the application name is
- *                              {@code null} or blank, the application will log a warning. Suggested
- *                              format is "MyCompany-Application/1.0".
+     *                              {@code null} or blank, the application will log a warning. Suggested
+     *                              format is "MyCompany-Application/1.0".
      * @param packageName           the package name of the app
      * @param findJsonKeyInFile
      * @param jsonKeyPath           the service account secret json file path
      * @param apkPath               the apk file path of the apk to upload
      * @param deobfuscationFilePath the deobfuscation file of the specified APK
      * @param recentChangesListings the recent changes in format: [BCP47 Language Code]:[recent changes file path].
-*                              Multiple listing thought comma. Sample: en-US:C:\temp\listing_en.txt
+     *                              Multiple listing thought comma. Sample: en-US:C:\temp\listing_en.txt
      * @param track                 The track for uploading the apk, can be 'alpha', beta', 'production' or 'rollout'
-     * @param rolloutFraction          */
-    public AndroidPublisherHelper(File workingDirectory, BuildLogger buildLogger, String applicationName, String packageName, boolean findJsonKeyInFile, String jsonKeyPath, String jsonKeyContent, String apkPath, String deobfuscationFilePath, String recentChangesListings, String track, String rolloutFraction) {
+     * @param rolloutFraction       The rollout fraction
+     * @param trackCustomNames      Comma separated track names for `custom` track
+     */
+    public AndroidPublisherHelper(
+            File workingDirectory,
+            BuildLogger buildLogger,
+            String applicationName,
+            String packageName,
+            boolean findJsonKeyInFile,
+            String jsonKeyPath,
+            String jsonKeyContent,
+            String apkPath,
+            String deobfuscationFilePath,
+            String recentChangesListings,
+            String track,
+            String rolloutFraction,
+            String trackCustomNames
+    ) {
         mWorkingDirectory = workingDirectory;
         mLogger = buildLogger;
         mApplicationName = applicationName;
@@ -106,6 +124,7 @@ public class AndroidPublisherHelper {
         mRecentChangesListings = recentChangesListings;
         mTrack = track;
         mRolloutFractionString = rolloutFraction;
+        mTrackCustomNames = trackCustomNames;
     }
 
     /**
@@ -128,6 +147,9 @@ public class AndroidPublisherHelper {
             } catch (NumberFormatException ex) {
                 throw new IllegalArgumentException("User fraction cannot be parsed as double: " + mRolloutFractionString);
             }
+        } else if (TRACK_CUSTOM.equals(mTrack)) {
+            Preconditions.checkArgument(!Strings.isNullOrEmpty(mTrackCustomNames), "Not specified names for custom tracks!");
+            mCustomTracks = mTrackCustomNames.split(",\\s*");
         }
 
         String apkFullPath = relativeToFullPath(mApkPath);
@@ -246,22 +268,33 @@ public class AndroidPublisherHelper {
             }
         }
 
-        if (!TRACK_NONE.equals(mTrack)) {
-            mLogger.addBuildLogEntry("Assigning apk to the \"" + mTrack + "\" track...");
-            List<Integer> apkVersionCodes = Collections.singletonList(apkVersionCode);
-            Track trackContent = new Track().setTrack(mTrack).setVersionCodes(apkVersionCodes);
-            if (TRACK_ROLLOUT.equals(mTrack)) {
-                trackContent.setUserFraction(mRolloutFraction);
+        if (TRACK_NONE.equals(mTrack)) {
+            mLogger.addBuildLogEntry("Track was not set, so apk will not be assigned to any track...");
+        } else if (TRACK_CUSTOM.equals(mTrack)){
+            mLogger.addBuildLogEntry("Assigning apk to the tracks: " + mTrackCustomNames);
+            for (String customTrack : mCustomTracks) {
+                assignToTrack(edits, editId, apkVersionCode, customTrack);
             }
-            edits.tracks()
-                    .update(mPackageName, editId, mTrack, trackContent)
-                    .execute();
-            mLogger.addBuildLogEntry(String.format("Track \"%s\" has been updated!", mTrack));
+        } else {
+            mLogger.addBuildLogEntry("Assigning apk to the \"" + mTrack + "\" track...");
+            assignToTrack(edits, editId, apkVersionCode, mTrack);
         }
         mLogger.addBuildLogEntry("Committing changes for edit...");
         AppEdit appEdit = edits.commit(mPackageName, editId)
                 .execute();
         mLogger.addBuildLogEntry(String.format("App edit with id %s has been committed!", appEdit.getId()));
         mLogger.addBuildLogEntry("=\n\n==================\n\n PUBLISHED SUCCESSFUL \n\n==================\n\n");
+    }
+
+    private void assignToTrack(AndroidPublisher.Edits edits, String editId, Integer apkVersionCode, String trackName) throws IOException {
+        List<Integer> apkVersionCodes = Collections.singletonList(apkVersionCode);
+        Track trackContent = new Track().setTrack(trackName).setVersionCodes(apkVersionCodes);
+        if (TRACK_ROLLOUT.equals(mTrack)) {
+            trackContent.setUserFraction(mRolloutFraction);
+        }
+        edits.tracks()
+                .update(mPackageName, editId, mTrack, trackContent)
+                .execute();
+        mLogger.addBuildLogEntry(String.format("Track \"%s\" has been updated!", mTrack));
     }
 }

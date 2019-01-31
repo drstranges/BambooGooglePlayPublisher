@@ -27,6 +27,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
+import static com.drextended.gppublisher.bamboo.BaseTaskConfigurator.*;
+
 public class GPPDeploymentTask implements DeploymentTaskType {
 
     @NotNull
@@ -34,21 +36,36 @@ public class GPPDeploymentTask implements DeploymentTaskType {
         final TaskResultBuilder builder = TaskResultBuilder.newBuilder(taskContext).failed(); //Initially set to Failed.
         final BuildLogger buildLogger = taskContext.getBuildLogger();
 
-        final String applicationName = taskContext.getConfigurationMap().get("applicationName");
-        final String packageName = taskContext.getConfigurationMap().get("packageName");
-        final String jsonKeyPath = taskContext.getConfigurationMap().get("jsonKeyPath");
-        final String jsonKeyContent = taskContext.getConfigurationMap().get("jsonKeyContent");
-        final boolean findJsonKeyInFile = taskContext.getConfigurationMap().getAsBoolean("findJsonKeyInFile");
-        final String apkPath = taskContext.getConfigurationMap().get("apkPath");
-        final String deobfuscationFilePath = taskContext.getConfigurationMap().get("deobfuscationFilePath");
-        final String recentChangesListings = taskContext.getConfigurationMap().get("recentChangesListings");
-        final String track = taskContext.getConfigurationMap().get("track");
-        final String rolloutFraction = taskContext.getConfigurationMap().get("rolloutFraction");
+        final String applicationName = taskContext.getConfigurationMap().get(APPLICATION_NAME);
+        final String packageName = taskContext.getConfigurationMap().get(PACKAGE_NAME);
+        final String jsonKeyPath = taskContext.getConfigurationMap().get(JSON_KEY_PATH);
+        final String jsonKeyContent = taskContext.getConfigurationMap().get(JSON_KEY_CONTENT);
+        final boolean findJsonKeyInFile = taskContext.getConfigurationMap().getAsBoolean(FIND_JSON_KEY_IN_FILE);
+        final String apkPath = taskContext.getConfigurationMap().get(APK_PATH);
+        final String deobfuscationFilePath = taskContext.getConfigurationMap().get(DEOBFUSCATION_FILE_PATH);
+        final String recentChangesListings = taskContext.getConfigurationMap().get(RECENT_CHANGES_LISTINGS);
+        final String track = taskContext.getConfigurationMap().get(TRACK);
+        final String rolloutFraction = taskContext.getConfigurationMap().get(ROLLOUT_FRACTION);
+        final String trackCustomNames = taskContext.getConfigurationMap().get(TRACK_CUSTOM_NAMES);
 
         buildLogger.addBuildLogEntry("Start deploy task for app " + applicationName);
 
         try {
-            AndroidPublisherHelper helper = new AndroidPublisherHelper(taskContext.getWorkingDirectory(), buildLogger, applicationName, packageName, findJsonKeyInFile, jsonKeyPath, jsonKeyContent, apkPath, deobfuscationFilePath, recentChangesListings, track, rolloutFraction);
+            AndroidPublisherHelper helper = new AndroidPublisherHelper(
+                    taskContext.getWorkingDirectory(),
+                    buildLogger,
+                    applicationName,
+                    packageName,
+                    findJsonKeyInFile,
+                    jsonKeyPath,
+                    jsonKeyContent,
+                    apkPath,
+                    deobfuscationFilePath,
+                    recentChangesListings,
+                    track,
+                    rolloutFraction,
+                    trackCustomNames
+            );
             helper.init();
             helper.makeInsertRequest();
 

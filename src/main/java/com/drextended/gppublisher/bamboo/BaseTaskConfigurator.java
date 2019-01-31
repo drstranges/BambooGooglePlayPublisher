@@ -46,6 +46,8 @@ public class BaseTaskConfigurator extends AbstractTaskConfigurator {
     public static final String TRACK = "track";
     public static final String TRACK_TYPES = "trackTypes";
 
+    public static final String TRACK_CUSTOM_NAMES = "trackCustomNames";
+
     public static final String ROLLOUT_FRACTION = "rolloutFraction";
     public static final String ROLLOUT_FRACTIONS = "rolloutFractions";
     public static final String ROLLOUT_FRACTION_DEFAULT = "0.1"; // Acceptable values are 0.05, 0.1, 0.2, and 0.5
@@ -62,9 +64,11 @@ public class BaseTaskConfigurator extends AbstractTaskConfigurator {
             .put(TRACK_BETA, TRACK_BETA)
             .put(TRACK_PRODUCTION, TRACK_PRODUCTION)
             .put(TRACK_ROLLOUT, TRACK_ROLLOUT)
+            .put(TRACK_CUSTOM, TRACK_CUSTOM)
             .build();
 
     public static final String DEFAULT_TRACK = TRACK_INTERNAL;
+    public static final String DEFAULT_CUSTOM_TRACK_NAMES = TRACK_INTERNAL + ", custom1, custom2";
 
     public BaseTaskConfigurator() {
     }
@@ -82,6 +86,7 @@ public class BaseTaskConfigurator extends AbstractTaskConfigurator {
         config.put(DEOBFUSCATION_FILE_PATH, params.getString(DEOBFUSCATION_FILE_PATH));
         config.put(RECENT_CHANGES_LISTINGS, params.getString(RECENT_CHANGES_LISTINGS));
         config.put(TRACK, params.getString(TRACK));
+        config.put(TRACK_CUSTOM_NAMES, params.getString(TRACK_CUSTOM_NAMES));
         config.put(ROLLOUT_FRACTION, params.getString(ROLLOUT_FRACTION));
         return config;
     }
@@ -91,6 +96,7 @@ public class BaseTaskConfigurator extends AbstractTaskConfigurator {
         super.populateContextForCreate(context);
         context.put(TRACK_TYPES, TRACK_MAP);
         context.put(TRACK, DEFAULT_TRACK);
+        context.put(TRACK_CUSTOM_NAMES, DEFAULT_CUSTOM_TRACK_NAMES);
         context.put(FIND_JSON_KEY_IN_FILE, false);
         context.put(ROLLOUT_FRACTION, ROLLOUT_FRACTION_DEFAULT);
         context.put(ROLLOUT_FRACTIONS, ROLLOUT_FRACTION_MAP);
@@ -111,6 +117,7 @@ public class BaseTaskConfigurator extends AbstractTaskConfigurator {
         context.put(TRACK, taskDefinition.getConfiguration().get(TRACK));
         String fraction = taskDefinition.getConfiguration().get(ROLLOUT_FRACTION);
         context.put(ROLLOUT_FRACTION, fraction != null ? fraction : ROLLOUT_FRACTION_DEFAULT);
+        context.put(TRACK_CUSTOM_NAMES, taskDefinition.getConfiguration().get(TRACK_CUSTOM_NAMES));
         context.put(ROLLOUT_FRACTIONS, ROLLOUT_FRACTION_MAP);
     }
 
@@ -127,8 +134,11 @@ public class BaseTaskConfigurator extends AbstractTaskConfigurator {
         }
         validateNotEmpty(params, errorCollection, APK_PATH);
         validateNotEmpty(params, errorCollection, TRACK);
-        if (TRACK_ROLLOUT.equals(params.getString(TRACK))) {
+        String track = params.getString(TRACK);
+        if (TRACK_ROLLOUT.equals(track)) {
             validateNotEmpty(params, errorCollection, ROLLOUT_FRACTION);
+        } else if (TRACK_CUSTOM.equals(track)) {
+            validateNotEmpty(params, errorCollection, TRACK_CUSTOM_NAMES);
         }
     }
 
