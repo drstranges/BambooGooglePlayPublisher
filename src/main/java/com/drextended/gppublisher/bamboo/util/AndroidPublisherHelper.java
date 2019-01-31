@@ -36,9 +36,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Helper class to initialize the publisher APIs client library.
@@ -76,7 +74,7 @@ public class AndroidPublisherHelper {
     private AndroidPublisher mAndroidPublisher;
     private File mApkFile;
     private File mDeobfuscationFile;
-    private ArrayList<ApkListing> mApkListings;
+    private List<LocalizedText> mReleaseNotes;
     private Double mRolloutFraction;
     private String[] mCustomTracks;
 
@@ -175,7 +173,7 @@ public class AndroidPublisherHelper {
 
         if (!Strings.isNullOrEmpty(mRecentChangesListings)) {
             String[] rcParts = mRecentChangesListings.trim().split("\\s*,\\s*");
-            mApkListings = new ArrayList<ApkListing>(rcParts.length);
+            mReleaseNotes = new ArrayList<LocalizedText>(rcParts.length);
             for (String rcPart : rcParts) {
                 String[] rcPieces = rcPart.split("\\s*::\\s*");
 
@@ -198,10 +196,9 @@ public class AndroidPublisherHelper {
                     inputStream.close();
                 }
 
-                ApkListing apkListing = new ApkListing();
-                apkListing.setLanguage(languageCode);
-                apkListing.setRecentChanges(recentChanges);
-                mApkListings.add(apkListing);
+                mReleaseNotes.add(
+                        new LocalizedText().setLanguage(languageCode).setText(recentChanges)
+                );
             }
         }
         mLogger.addBuildLogEntry("Initialized successfully!");
@@ -258,25 +255,13 @@ public class AndroidPublisherHelper {
             mLogger.addBuildLogEntry("Mapping has been uploaded!");
         }
 
-        if (mApkListings != null && !mApkListings.isEmpty()) {
-            mLogger.addBuildLogEntry("Upload recent changes listings ...");
-            for (ApkListing apkListing : mApkListings) {
-                edits.apklistings()
-                        .update(mPackageName, editId, apkVersionCode, apkListing.getLanguage(), apkListing)
-                        .execute();
-                mLogger.addBuildLogEntry("Recent Changes uploaded for language: " + apkListing.getLanguage());
-            }
-        }
-
         if (TRACK_NONE.equals(mTrack)) {
             mLogger.addBuildLogEntry("Track was not set, so apk will not be assigned to any track...");
         } else if (TRACK_CUSTOM.equals(mTrack)){
-            mLogger.addBuildLogEntry("Assigning apk to the tracks: " + mTrackCustomNames);
             for (String customTrack : mCustomTracks) {
                 assignToTrack(edits, editId, apkVersionCode, customTrack);
             }
         } else {
-            mLogger.addBuildLogEntry("Assigning apk to the \"" + mTrack + "\" track...");
             assignToTrack(edits, editId, apkVersionCode, mTrack);
         }
         mLogger.addBuildLogEntry("Committing changes for edit...");
@@ -287,14 +272,25 @@ public class AndroidPublisherHelper {
     }
 
     private void assignToTrack(AndroidPublisher.Edits edits, String editId, Integer apkVersionCode, String trackName) throws IOException {
-        List<Integer> apkVersionCodes = Collections.singletonList(apkVersionCode);
-        Track trackContent = new Track().setTrack(trackName).setVersionCodes(apkVersionCodes);
-        if (TRACK_ROLLOUT.equals(mTrack)) {
-            trackContent.setUserFraction(mRolloutFraction);
+        mLogger.addBuildLogEntry("Assigning release to the track: " + trackName);
+
+        TrackRelease release = new TrackRelease()
+                .setVersionCodes(Collections.singletonList(Long.valueOf(apkVersionCode)))
+                .setStatus("completed")
+                .setReleaseNotes(mReleaseNotes);
+
+        if (TRACK_ROLLOUT.equals(trackName)) {
+            release.setUserFraction(mRolloutFraction);
         }
+
+        Track trackContent = new Track()
+                .setTrack(trackName)
+                .setReleases(Collections.singletonList(release));
+
         edits.tracks()
-                .update(mPackageName, editId, mTrack, trackContent)
+                .update(mPackageName, editId, trackName, trackContent)
                 .execute();
-        mLogger.addBuildLogEntry(String.format("Track \"%s\" has been updated!", mTrack));
+
+        mLogger.addBuildLogEntry("Release successfully assigning to the track: " + trackName);
     }
 }
