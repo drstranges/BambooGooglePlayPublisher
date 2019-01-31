@@ -276,11 +276,14 @@ public class AndroidPublisherHelper {
 
         TrackRelease release = new TrackRelease()
                 .setVersionCodes(Collections.singletonList(Long.valueOf(apkVersionCode)))
-                .setStatus("completed")
                 .setReleaseNotes(mReleaseNotes);
 
         if (TRACK_ROLLOUT.equals(trackName)) {
-            release = release.setUserFraction(mRolloutFraction);
+            release = release
+                    .setUserFraction(mRolloutFraction)
+                    .setStatus("inProgress");
+        } else {
+            release = release.setStatus("completed");
         }
 
         Track trackContent = new Track()
