@@ -280,7 +280,7 @@ public class AndroidPublisherHelper {
                 .setReleaseNotes(mReleaseNotes);
 
         if (TRACK_ROLLOUT.equals(trackName)) {
-            release.setUserFraction(mRolloutFraction);
+            release = release.setUserFraction(mRolloutFraction);
         }
 
         Track trackContent = new Track()

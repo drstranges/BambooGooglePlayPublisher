@@ -18,6 +18,6 @@
         [@ww.select labelKey="com.drextended.gppublisher.bamboo.rolloutFraction" name="rolloutFraction" list="rolloutFractions" required='true'/]
     [/@ui.bambooSection]
     [@ui.bambooSection dependsOn='track' showOn='custom']
-            [@ww.select labelKey="com.drextended.gppublisher.bamboo.customTrackNames" name="trackCustomNames" required='true'/]
-        [/@ui.bambooSection]
+            [@ww.textfield labelKey="com.drextended.gppublisher.bamboo.customTrackNames" name="trackCustomNames" required='true'/]
+    [/@ui.bambooSection]
 [@ww.label labelKey="com.drextended.gppublisher.bamboo.branding" name="googlePlayBranding"/]
