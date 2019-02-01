@@ -70,11 +70,10 @@
 
     [@ui.bambooSection dependsOn='track' showOn='rollout']
 
-        [@ww.select
+        [@ww.textfield
             labelKey="com.drextended.gppublisher.bamboo.rolloutFraction"
-    descriptionKey="com.drextended.gppublisher.bamboo.rolloutFraction.info"
+            descriptionKey="com.drextended.gppublisher.bamboo.rolloutFraction.info"
             name="rolloutFraction"
-            list="rolloutFractions"
             required='true'
         /]
 
@@ -84,7 +83,7 @@
 
                 [@ww.textfield
                     labelKey="com.drextended.gppublisher.bamboo.customTrackNames"
-    descriptionKey="com.drextended.gppublisher.bamboo.customTrackNames.info"
+                    descriptionKey="com.drextended.gppublisher.bamboo.customTrackNames.info"
                     name="trackCustomNames"
                     required='true'
                 /]

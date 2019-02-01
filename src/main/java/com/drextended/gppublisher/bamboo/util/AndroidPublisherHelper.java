@@ -145,6 +145,9 @@ public class AndroidPublisherHelper {
             } catch (NumberFormatException ex) {
                 throw new IllegalArgumentException("User fraction cannot be parsed as double: " + mRolloutFractionString);
             }
+            if (mRolloutFraction < 0 || mRolloutFraction >= 1) {
+                throw new IllegalArgumentException("User fraction must be in range (0 <= fraction < 1): " + mRolloutFractionString);
+            }
         } else if (TRACK_CUSTOM.equals(mTrack)) {
             Preconditions.checkArgument(!Strings.isNullOrEmpty(mTrackCustomNames), "Not specified names for custom tracks!");
             mCustomTracks = mTrackCustomNames.split(",\\s*");

@@ -49,14 +49,7 @@ public class BaseTaskConfigurator extends AbstractTaskConfigurator {
     public static final String TRACK_CUSTOM_NAMES = "trackCustomNames";
 
     public static final String ROLLOUT_FRACTION = "rolloutFraction";
-    public static final String ROLLOUT_FRACTIONS = "rolloutFractions";
     public static final String ROLLOUT_FRACTION_DEFAULT = "0.1"; // Acceptable values are 0.05, 0.1, 0.2, and 0.5
-    public static final Map<String, String> ROLLOUT_FRACTION_MAP = ImmutableMap.<String, String>builder()
-            .put("0.05", "0.05")
-            .put("0.1", "0.1")
-            .put("0.2", "0.2")
-            .put("0.5", "0.5")
-            .build();
     private static final Map<String, String> TRACK_MAP = ImmutableMap.<String, String>builder()
             .put(TRACK_NONE, TRACK_NONE)
             .put(TRACK_INTERNAL, TRACK_INTERNAL)
@@ -99,7 +92,6 @@ public class BaseTaskConfigurator extends AbstractTaskConfigurator {
         context.put(TRACK_CUSTOM_NAMES, DEFAULT_CUSTOM_TRACK_NAMES);
         context.put(FIND_JSON_KEY_IN_FILE, false);
         context.put(ROLLOUT_FRACTION, ROLLOUT_FRACTION_DEFAULT);
-        context.put(ROLLOUT_FRACTIONS, ROLLOUT_FRACTION_MAP);
     }
 
     @Override
@@ -118,7 +110,6 @@ public class BaseTaskConfigurator extends AbstractTaskConfigurator {
         String fraction = taskDefinition.getConfiguration().get(ROLLOUT_FRACTION);
         context.put(ROLLOUT_FRACTION, fraction != null ? fraction : ROLLOUT_FRACTION_DEFAULT);
         context.put(TRACK_CUSTOM_NAMES, taskDefinition.getConfiguration().get(TRACK_CUSTOM_NAMES));
-        context.put(ROLLOUT_FRACTIONS, ROLLOUT_FRACTION_MAP);
     }
 
     @Override
@@ -133,10 +124,28 @@ public class BaseTaskConfigurator extends AbstractTaskConfigurator {
             validateNotEmpty(params, errorCollection, JSON_KEY_CONTENT);
         }
         validateNotEmpty(params, errorCollection, APK_PATH);
+        final String apkPath = params.getString(APK_PATH);
+        if (apkPath == null || (!apkPath.endsWith(".apk") && !apkPath.endsWith(".aab"))) {
+            errorCollection.addError(APK_PATH, "Should be path to *.apk file");
+        }
+
         validateNotEmpty(params, errorCollection, TRACK);
         String track = params.getString(TRACK);
         if (TRACK_ROLLOUT.equals(track)) {
-            validateNotEmpty(params, errorCollection, ROLLOUT_FRACTION);
+            String rolloutFraction = params.getString(ROLLOUT_FRACTION);
+            if (StringUtils.isEmpty(rolloutFraction)) {
+                errorCollection.addError(rolloutFraction, "This field can't be empty");
+            } else {
+                try {
+                    //noinspection ConstantConditions
+                    double fraction = Double.parseDouble(rolloutFraction);
+                    if (fraction < 0 || fraction >= 1) {
+                        errorCollection.addError(ROLLOUT_FRACTION, "User fraction must be in range (0 <= fraction < 1)");
+                    }
+                } catch (NumberFormatException ex) {
+                    errorCollection.addError(ROLLOUT_FRACTION, "User fraction cannot be parsed as double");
+                }
+            }
         } else if (TRACK_CUSTOM.equals(track)) {
             validateNotEmpty(params, errorCollection, TRACK_CUSTOM_NAMES);
         }
@@ -146,8 +155,6 @@ public class BaseTaskConfigurator extends AbstractTaskConfigurator {
         final String value = params.getString(key);
         if (StringUtils.isEmpty(value)) {
             errorCollection.addError(key, "This field can't be empty");
-        } else if (APK_PATH.equals(key) && !value.endsWith(".apk")) {
-            errorCollection.addError(key, "Should be path to *.apk file");
         }
     }
 
