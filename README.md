@@ -14,6 +14,9 @@ Plugin for Atlassian Bamboo for uploading apk files on Google Play using Publish
 ## Used Library:
   - [Google Play Developer API client library](https://developers.google.com/android-publisher)
 
+## Data security and privacy statement
+This plugin does not collect any data despite the task configuration. The task configuration will be saved in your bamboo database. The plugin will not download or upload any data to third party companies, except files of your app that you select to publish on Google Play - this files uploads directly to Google Play. You can also check the source code to prove this statement and/or compile the plugin from source if you do not trust atlassian market place.
+
 License
 =======
 
