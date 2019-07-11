@@ -36,7 +36,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Helper class to initialize the publisher APIs client library.
@@ -49,6 +51,7 @@ import java.util.*;
 public class AndroidPublisherHelper {
 
     static final String MIME_TYPE_APK = "application/vnd.android.package-archive";
+    static final String MIME_TYPE_OCTET_STREAM = "application/octet-stream";
     public static final String TRACK_NONE = "none";
     public static final String TRACK_INTERNAL = "internal";
     public static final String TRACK_ALPHA = "alpha";
@@ -87,8 +90,8 @@ public class AndroidPublisherHelper {
      * @param packageName           the package name of the app
      * @param findJsonKeyInFile
      * @param jsonKeyPath           the service account secret json file path
-     * @param apkPath               the apk file path of the apk to upload
-     * @param deobfuscationFilePath the deobfuscation file of the specified APK
+     * @param apkPath               the apk/aab file path of the apk/aab to upload
+     * @param deobfuscationFilePath the deobfuscation file of the specified APK/AAB
      * @param recentChangesListings the recent changes in format: [BCP47 Language Code]:[recent changes file path].
      *                              Multiple listing thought comma. Sample: en-US:C:\temp\listing_en.txt
      * @param track                 The track for uploading the apk, can be 'alpha', beta', 'production' or 'rollout'
@@ -137,7 +140,7 @@ public class AndroidPublisherHelper {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(mApplicationName), "Application name cannot be null or empty!");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(mPackageName), "Package name cannot be null or empty!");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(mTrack), "Track cannot be null or empty!");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(mApkPath), "Apk path cannot be null or empty!");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(mApkPath), "Apk/aab path cannot be null or empty!");
 
         if (TRACK_ROLLOUT.equals(mTrack)) {
             try {
@@ -211,7 +214,7 @@ public class AndroidPublisherHelper {
         HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         Credential credential = GoogleCredential.fromStream(jsonKeyInputStream, httpTransport, jsonFactory)
                 .createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
-        mAndroidPublisher = new AndroidPublisher.Builder(httpTransport, jsonFactory, credential)
+        mAndroidPublisher = new AndroidPublisher.Builder(httpTransport, jsonFactory, new RequestInitializer(credential))
                 .setApplicationName(mApplicationName)
                 .build();
         mLogger.addBuildLogEntry("AndroidPublisher Api Service created!");
@@ -240,18 +243,33 @@ public class AndroidPublisherHelper {
         final String editId = edit.getId();
         mLogger.addBuildLogEntry(String.format("Created edit session with id: %s", editId));
 
-        mLogger.addBuildLogEntry("Uploading new apk file...");
-        final AbstractInputStreamContent apkFile = new FileContent(AndroidPublisherHelper.MIME_TYPE_APK, mApkFile);
-        Apk apk = edits.apks()
-                .upload(mPackageName, editId, apkFile)
-                .execute();
-        Integer apkVersionCode = apk.getVersionCode();
-        mLogger.addBuildLogEntry(String.format("Apk file with version code %s has been uploaded!", apkVersionCode));
+        Integer apkVersionCode;
+
+        if (mApkPath.endsWith(".apk")) {
+            mLogger.addBuildLogEntry("Uploading new apk file...");
+            final AbstractInputStreamContent apkFile = new FileContent(AndroidPublisherHelper.MIME_TYPE_APK, mApkFile);
+            Apk apk = edits.apks()
+                    .upload(mPackageName, editId, apkFile)
+                    .execute();
+            apkVersionCode = apk.getVersionCode();
+            mLogger.addBuildLogEntry(String.format("Apk file with version code %s has been uploaded!", apkVersionCode));
+        } else if (mApkPath.endsWith(".aab")){
+            mLogger.addBuildLogEntry("Uploading new aab file...");
+            final AbstractInputStreamContent aabFile = new FileContent(AndroidPublisherHelper.MIME_TYPE_OCTET_STREAM, mApkFile);
+            Bundle bundle = edits.bundles()
+                    .upload(mPackageName, editId, aabFile)
+                    .execute();
+            apkVersionCode = bundle.getVersionCode();
+            mLogger.addBuildLogEntry(String.format("App Bundle with version code %s has been uploaded!", apkVersionCode));
+        } else {
+            mLogger.addBuildLogEntry("File [" + mApkPath + "] is not apk nor aab file!");
+            throw new IllegalArgumentException("File [" + mApkPath + "] is not apk nor aab file!");
+        }
 
         if (mDeobfuscationFile != null) {
             mLogger.addBuildLogEntry("Uploading new mapping file...");
             Preconditions.checkArgument(mDeobfuscationFile.exists(), "Mapping (deobfuscation) file not found in path: " + mDeobfuscationFilePath);
-            final AbstractInputStreamContent deobfuscationFile = new FileContent("application/octet-stream", mDeobfuscationFile);
+            final AbstractInputStreamContent deobfuscationFile = new FileContent(AndroidPublisherHelper.MIME_TYPE_OCTET_STREAM, mDeobfuscationFile);
             edits.deobfuscationfiles()
                     .upload(mPackageName, editId, apkVersionCode, "proguard", deobfuscationFile)
                     .execute();

@@ -126,7 +126,7 @@ public class BaseTaskConfigurator extends AbstractTaskConfigurator {
         validateNotEmpty(params, errorCollection, APK_PATH);
         final String apkPath = params.getString(APK_PATH);
         if (apkPath == null || (!apkPath.endsWith(".apk") && !apkPath.endsWith(".aab"))) {
-            errorCollection.addError(APK_PATH, "Should be path to *.apk file");
+            errorCollection.addError(APK_PATH, "Should be path to *.apk or *.aab file");
         }
 
         validateNotEmpty(params, errorCollection, TRACK);
