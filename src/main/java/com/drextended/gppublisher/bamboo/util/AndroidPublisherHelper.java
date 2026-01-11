@@ -23,9 +23,9 @@ import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.repackaged.com.google.common.base.Preconditions;
-import com.google.api.client.repackaged.com.google.common.base.Strings;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.api.services.androidpublisher.AndroidPublisher;
 import com.google.api.services.androidpublisher.AndroidPublisherScopes;
 import com.google.api.services.androidpublisher.model.*;
@@ -210,7 +210,7 @@ public class AndroidPublisherHelper {
         mLogger.addBuildLogEntry("Initialized successfully!");
 
         mLogger.addBuildLogEntry("Creating AndroidPublisher Api Service...");
-        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+        JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
         HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         Credential credential = GoogleCredential.fromStream(jsonKeyInputStream, httpTransport, jsonFactory)
                 .createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));

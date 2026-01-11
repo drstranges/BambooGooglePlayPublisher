@@ -9,17 +9,21 @@
 
     <!-- add our i18n resource -->
     <resource type="i18n" name="i18n" location="english"/>
-    
+
     <!-- add our web resources -->
     <web-resource key="bamboogppublisher-resources" name="bamboogppublisher Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
-        
+
         <resource type="download" name="bamboogppublisher.css" location="/css/bamboogppublisher.css"/>
         <resource type="download" name="bamboogppublisher.js" location="/js/bamboogppublisher.js"/>
         <resource type="download" name="images/" location="/images"/>
 
         <context>bamboogppublisher</context>
     </web-resource>
+
+    <xwork name="security-struts" key="securityStruts">
+        <constant name="struts.allowlist.classes" value="com.google.common.collect.ImmutableMapEntry" />
+    </xwork>
 
     <taskType key="GPPBuildTask" name="Google Play Publisher" class="com.drextended.gppublisher.bamboo.GPPBuildTask">
         <description>A task that publish your apk file to Google Play using the Google Play Developer Publishing API</description>
