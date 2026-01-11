@@ -11,7 +11,7 @@
     <resource type="i18n" name="i18n" location="english"/>
 
     <!-- add our web resources -->
-    <web-resource key="bamboogppublisher-resources" name="bamboogppublisher Web Resources">
+    <web-resource key="bamboogppublisher-resources" name="${project.name} Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
 
         <resource type="download" name="bamboogppublisher.css" location="/css/bamboogppublisher.css"/>
@@ -21,20 +21,20 @@
         <context>bamboogppublisher</context>
     </web-resource>
 
-    <xwork name="security-struts" key="securityStruts">
-        <constant name="struts.allowlist.classes" value="com.google.common.collect.ImmutableMapEntry" />
+    <xwork name="${project.name} UI Security Configuration" key="security-struts">
+        <constant name="struts.allowlist.classes" value="com.google.common.collect.ImmutableMapEntry,java.util.AbstractMap$SimpleImmutableEntry" />
     </xwork>
 
-    <taskType key="GPPBuildTask" name="Google Play Publisher" class="com.drextended.gppublisher.bamboo.GPPBuildTask">
-        <description>A task that publish your apk file to Google Play using the Google Play Developer Publishing API</description>
+    <taskType key="GPPBuildTask" name="${project.name} Build Task" class="com.drextended.gppublisher.bamboo.GPPBuildTask">
+        <description>A task that publishes your APK/AAB file to Google Play using the Google Play Developer Publishing API</description>
         <category name="deployment"/>
         <configuration class="com.drextended.gppublisher.bamboo.BuildTaskConfigurator"/>
         <resource type="freemarker" name="edit" location="editBuildTask.ftl"/>
         <resource type="download" name="icon" location="icon.png"/>
     </taskType>
 
-    <taskType key="GPPDeploymentTask" name="Google Play Publisher" class="com.drextended.gppublisher.bamboo.GPPDeploymentTask">
-        <description>A task that publish your apk file to Google Play using the Google Play Developer Publishing API</description>
+    <taskType key="GPPDeploymentTask" name="${project.name} Deployment Task" class="com.drextended.gppublisher.bamboo.GPPDeploymentTask">
+        <description>A task that publishes your APK/AAB file to Google Play using the Google Play Developer Publishing API</description>
         <category name="deployment"/>
         <configuration class="com.drextended.gppublisher.bamboo.DeploymentTaskConfigurator"/>
         <resource type="freemarker" name="edit" location="editDeploymentTask.ftl"/>

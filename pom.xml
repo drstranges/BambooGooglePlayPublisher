@@ -15,70 +15,92 @@
     </organization>
 
     <name>Google Play Publisher</name>
-    <description>Plugin for Atlassian Bamboo for uploading apk files on Google Play using Publishing API.</description>
+    <description>Plugin for Atlassian Bamboo for uploading APK/AAB files to Google Play using the Google Play Developer Publishing API.</description>
     <packaging>atlassian-plugin</packaging>
 
     <properties>
         <bamboo.version>11.0.8</bamboo.version>
         <bamboo.data.version>11.0.8</bamboo.data.version>
-        <amps.version>9.10.1</amps.version>
-        <plugin.testrunner.version>2.0.9</plugin.testrunner.version>
-        <atlassian.spring.scanner.version>2.2.4</atlassian.spring.scanner.version>
+        <atlassian.spring.scanner.version>5.1.0</atlassian.spring.scanner.version>
         <!-- This key is used to keep the consistency between the key in atlassian-plugin.xml and the key to generate bundle. -->
         <atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>maven-atlassian-all</id>
+            <url>https://packages.atlassian.com/maven-public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven-atlassian-all</id>
+            <url>https://packages.atlassian.com/maven-public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
     <dependencies>
         <dependency>
             <groupId>com.atlassian.bamboo</groupId>
             <artifactId>atlassian-bamboo-web</artifactId>
             <version>${bamboo.version}</version>
-            <scope>provided</scope>
+            <scope>provided</scope><!-- Supplied by Bamboo -->
         </dependency>
         <dependency>
             <groupId>com.atlassian.bamboo</groupId>
             <artifactId>atlassian-bamboo-api</artifactId>
             <version>${bamboo.version}</version>
-            <scope>provided</scope>
+            <scope>provided</scope><!-- Supplied by Bamboo -->
         </dependency>
         <dependency>
             <groupId>com.atlassian.bamboo</groupId>
             <artifactId>atlassian-bamboo-core</artifactId>
             <version>${bamboo.version}</version>
-            <scope>provided</scope>
+            <scope>provided</scope><!-- Supplied by Bamboo -->
         </dependency>
         <dependency>
             <groupId>com.atlassian.bamboo</groupId>
             <artifactId>atlassian-bamboo-deployments-api</artifactId>
             <version>${bamboo.version}</version>
-            <scope>provided</scope>
+            <scope>provided</scope><!-- Supplied by Bamboo -->
         </dependency>
 
         <dependency>
             <groupId>com.atlassian.plugin</groupId>
             <artifactId>atlassian-spring-scanner-annotation</artifactId>
             <version>${atlassian.spring.scanner.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-            <scope>provided</scope>
+            <scope>provided</scope><!-- Supplied by Bamboo -->
         </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>33.2.1-jre</version>
+            <version>33.5.0-jre</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>failureaccess</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -101,7 +123,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.15.1</version>
+            <version>2.21.0</version>
             <scope>provided</scope><!-- Supplied by Bamboo -->
         </dependency>
         <dependency>
@@ -119,34 +141,40 @@
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>annotations</artifactId>
-            <version>3.0.0</version>
+            <version>3.0.1u2</version>
             <scope>provided</scope><!-- Supplied by Bamboo -->
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>23.0.0</version>
+            <version>26.0.2-1</version>
             <scope>provided</scope><!-- Supplied by Bamboo -->
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.checkerframework</groupId>
             <artifactId>checker-qual</artifactId>
-            <version>3.42.0</version>
+            <version>3.53.0</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.google.errorprone</groupId>
             <artifactId>error_prone_annotations</artifactId>
-            <version>2.26.1</version>
+            <version>2.46.0</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.google.auto.value</groupId>
             <artifactId>auto-value-annotations</artifactId>
-            <version>1.11.0</version>
+            <version>1.11.1</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.google.j2objc</groupId>
             <artifactId>j2objc-annotations</artifactId>
-            <version>3.0.0</version>
+            <version>3.1</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>io.opencensus</groupId>
@@ -184,37 +212,37 @@
         <dependency>
             <groupId>com.google.http-client</groupId>
             <artifactId>google-http-client</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>com.google.http-client</groupId>
             <artifactId>google-http-client-gson</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>com.google.auth</groupId>
             <artifactId>google-auth-library-credentials</artifactId>
-            <version>1.30.1</version>
+            <version>1.41.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.http-client</groupId>
             <artifactId>google-http-client-apache-v2</artifactId>
-            <version>2.0.0</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>com.google.api</groupId>
             <artifactId>api-common</artifactId>
-            <version>2.53.0</version>
+            <version>2.55.2</version>
         </dependency>
         <dependency>
             <groupId>com.google.oauth-client</groupId>
             <artifactId>google-oauth-client</artifactId>
-            <version>1.36.0</version>
+            <version>1.39.0</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-api</artifactId>
-            <version>1.69.0</version>
+            <version>1.78.0</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -235,11 +263,63 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.atlassian.maven.plugins</groupId>
+                    <artifactId>bamboo-maven-plugin</artifactId>
+                    <version>9.11.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.atlassian.plugin</groupId>
+                    <artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
+                    <version>${atlassian.spring.scanner.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>2.20.1</version>
+                    <configuration>
+                        <ignoredVersions>
+                            <ignoredVersion>.+-SNAPSHOT</ignoredVersion>
+                            <ignoredVersion>.+-[mM]\d+</ignoredVersion>
+                            <ignoredVersion>.+-(rc|RC).*</ignoredVersion>
+                            <ignoredVersion>.+(rc|RC)\d*</ignoredVersion>
+                            <ignoredVersion>.+-(alpha|ALPHA|Alpha|beta|BETA|Beta|b).*</ignoredVersion>
+                            <ignoredVersion>.+\.(alpha|ALPHA|Alpha|beta|BETA|Beta|b).*</ignoredVersion>
+                        </ignoredVersions>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.9.0</version>
+                    <configuration>
+                        <usedDependencies>
+                            <!-- Added by atlas-create-bamboo-plugin, but we don't use them directly -->
+                            <usedDependency>com.atlassian.bamboo:atlassian-bamboo-web</usedDependency>
+                            <usedDependency>com.atlassian.plugin:atlassian-spring-scanner-annotation</usedDependency>
+                            <!-- Transitive dependencies we need to avoid packaging that we don't use directly -->
+                            <usedDependency>com.google.code.findbugs:jsr305</usedDependency>
+                            <usedDependency>commons-codec:commons-codec</usedDependency>
+                        </usedDependencies>
+                        <ignoredUsedUndeclaredDependencies>
+                            <!-- I can't seem to make the analyzer happy related to these transitive dependencies -->
+                            <ignoredUsedUndeclaredDependency>io.grpc:grpc-context</ignoredUsedUndeclaredDependency>
+                            <ignoredUsedUndeclaredDependency>javax.annotation:javax.annotation-api</ignoredUsedUndeclaredDependency>
+                            <ignoredUsedUndeclaredDependency>jakarta.annotation:jakarta.annotation-api</ignoredUsedUndeclaredDependency>
+                        </ignoredUsedUndeclaredDependencies>
+                        <ignoredUnusedDeclaredDependencies>
+                        </ignoredUnusedDeclaredDependencies>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
                 <artifactId>bamboo-maven-plugin</artifactId>
-                <version>${amps.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <productVersion>${bamboo.version}</productVersion>
@@ -271,7 +351,6 @@
             <plugin>
                 <groupId>com.atlassian.plugin</groupId>
                 <artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
-                <version>${atlassian.spring.scanner.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -291,29 +370,6 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <configuration>
-                    <usedDependencies>
-                        <!-- Added by atlas-create-bamboo-plugin, but we don't use them directly -->
-                        <usedDependency>com.atlassian.bamboo:atlassian-bamboo-web</usedDependency>
-                        <usedDependency>com.atlassian.plugin:atlassian-spring-scanner-annotation</usedDependency>
-                        <usedDependency>javax.inject:javax.inject</usedDependency>
-                        <!-- Transitive dependencies we need to avoid packaging that we don't use directly -->
-                        <usedDependency>com.google.code.findbugs:jsr305</usedDependency>
-                        <usedDependency>commons-codec:commons-codec</usedDependency>
-                    </usedDependencies>
-                    <ignoredUsedUndeclaredDependencies>
-                        <!-- I can't seem to make the analyzer happy related to these transitive dependencies -->
-                        <ignoredUsedUndeclaredDependency>io.grpc:grpc-context</ignoredUsedUndeclaredDependency>
-                        <ignoredUsedUndeclaredDependency>javax.annotation:javax.annotation-api</ignoredUsedUndeclaredDependency>
-                        <ignoredUsedUndeclaredDependency>jakarta.annotation:jakarta.annotation-api</ignoredUsedUndeclaredDependency>
-                    </ignoredUsedUndeclaredDependencies>
-                    <ignoredUnusedDeclaredDependencies>
-                    </ignoredUnusedDeclaredDependencies>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 </project>
